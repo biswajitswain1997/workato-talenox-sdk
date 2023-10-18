@@ -1,0 +1,341 @@
+{
+  title: 'My connector',
+
+  connection: {
+
+    fields: [
+      {
+        name: "token",
+        control_type: "string",
+        label: "Bearer token",
+        optional: false,
+        hint: "You can obtain the Talenox API token on your profile's top right nav bar -> API setting"
+      }
+    ],
+
+    authorization: {
+      type: 'custom_auth',
+
+      apply: lambda do |connection|
+        headers("Authorization": "Bearer #{connection["token"]}")
+      end
+    },
+
+    base_uri: lambda do |connection|
+      "https://api.talenox.com"
+    end
+  },
+  
+  
+  
+  
+  test: lambda do |connection|
+    get("/api/v2/cost_centres")
+  end,
+  
+  object_definitions: {
+    cost_centre: {
+      fields: lambda do
+        [
+          {name: "id"},
+          {name: "name"},
+          {name: "no_of_employees"},
+          {name: "enable_custom_cpf_csn", type: "boolean"},
+          {name: "custom_cpf_csn"},
+        ]
+      end
+    },
+    
+    payslip: {
+      fields: lambda do
+        [
+          {name: "payslips", type: "array", of: "object", properties:
+            [
+              {name: "ytd_gross_salary"},
+              {name: "ytd_bonus"},
+              {name: "total_recurring_full"},
+              {name: "total_adhoc"},
+              {name: "total_attendance"},
+              {name: "total_gross"},
+              {name: "total_bonus"},
+              {name: "total_net_payment"},
+              {name: "total_deductions"},
+              {name: "ytd_cpf_employee"},
+              {name: "ytd_cpf_employer"},
+              {name: "total_sg_fwl"},
+              {name: "total_sg_cpf_owage"},
+              {name: "total_sg_cpf_awage"},
+              {name: "total_sg_cpf_employee"},
+              {name: "total_sg_cpf_employer"},
+              {name: "total_sg_cpf_donation"},
+              {name: "total_sg_additional_cpf_donation"},
+              {name: "total_sg_cpf_sdl"},
+              {name: "employee_final_cpf"},
+              {name: "sg_total_gross"},
+              {name: "sg_total_sdl_contributable"},
+              {name: "id"},
+              {name: "employee_id"},
+              {name: "name"},
+              {name: "job_title"},
+              {name: "department"},
+              {name: "country_code"},
+              {name: "currency_unit"},
+              {name: "payslip_pay_date"},
+              {name: "total_leave_payments_or_deductions"},
+              {name: "total_reimbursements"},
+              {name: "total_allowances"},
+              {name: "total_commissions"},
+              {name: "total_directors_fees"},
+              {name: "total_leave_pay"},
+              {name: "total_basic_salary"},
+              {name: "leave_payments_or_deductions", type: "array"},
+              {name: "payment_reconciliation"},
+              {name: "total_taxable"},
+              {name: "attendance_pay_items", type: "array"},
+              {name: "recurring_pay_items", type: "array"},
+              {name: "adhoc_pay_items", type: "array", properties:
+                [
+                  {name: "id"},
+                  {name: "employee_id"},
+                  {name: "currency_value"},
+                  {name: "item_type"},
+                  {name: "amount"},
+                  {name: "remarks"},
+                  {name: "preferences", type: "object", properties:
+                    [
+                      {name: "sg_cpf"},
+                      {name: "sg_sdl"},
+                      {name: "sg_shg"},
+                      {name: "sg_tax"}
+                    ]
+                  },
+                  {name: "n_full_day"},
+                  {name: "pay_item_tag_id"},
+                  {name: "monkeylearn_tag_id"}
+                ]
+              },
+              {name: "overtime_pay"},
+              {name: "payment_method"},
+              {name: "total_sums_owage_awage", type: "object", properties:
+                [
+                  {name: "awage"},
+                  {name: "owage"}
+                ]
+              },
+              {name: "total_sg_cpf_employee_employer"},
+              {name: "sg_cpf_donation_type"},
+              {name: "sg_additional_cpf_donation_type"},
+              {name: "sg_cpf_contribution_type"},
+              {name: "total_sg_cpf_owage_subjected"},
+              {name: "total_sg_cpf_awage_subjected"},
+              {name: "total_sg_donation_type_amount", type: "object", properties:
+                [
+                  {name: "donation_month_year", type: "array"},
+                  {name: "donation_type", type: "array"},
+                  {name: "donation_amount", type: "array"},
+                  {name: "additional_donation_type", type: "array"},
+                  {name: "additional_donation_amount", type: "array"}
+                ]
+              },
+              {name: "total_sg_cpf_employee_awage"},
+              {name: "total_sg_cpf_employer_awage"},
+              {name: "total_sg_cpf_employee_owage"},
+              {name: "total_sg_cpf_employer_owage"},
+              {name: "total_sg_cpf_withholding"},
+              {name: "sg_total_shg_contributable"},
+              {name: "sg_total_taxable"}
+            ]
+          },
+          {name: "total_gross_salary"},
+          {name: "total_ytd_gross_salary"},
+          {name: "total_ytd_bonus"},
+          {name: "total_ytd_cpf_employee"},
+          {name: "total_ytd_cpf_employer"},
+          {name: "month"},
+          {name: "year"},
+          {name: "payslip_send_on_pd_setting"},
+          {name: "payslip_pay_date"}
+        ]
+      end
+    },
+    
+    employee: {
+      fields: lambda do
+        [
+          {name: "id"},
+          {name: "employee_id"},
+          {name: "first_name"},
+          {name: "middle_name"},
+          {name: "last_name"},
+          {name: "email"},
+          {name: "payment_method"},
+          {name: "hired_date"},
+          {name: "resign_date"},
+          {name: "race"},
+          {name: "religion"},
+          {name: "blood_group"},
+          {name: "contact_number"},
+          {name: "ssn"},
+          {name: "citizenship"},
+          {name: "nationality"},
+          {name: "gender"},
+          {name: "marital_status"},
+          {name: "passport_number"},
+          {name: "passport_date_of_issue"},
+          {name: "passport_date_of_expiry"},
+          {name: "passport_place_of_issue"},
+          {name: "chinese_name"},
+          {name: "nickname"},
+          {name: "birthdate"},
+          {name: "cost_centre"},
+          {name: "current_job"},
+          {name: "jobs", type: "array"},
+          {name: "next_of_kins", type: "array"},
+          {name: "bank_account", type: "object", properties:
+            [
+              {name: "id"},
+              {name: "bank_type"},
+              {name: "bank_code"},
+              {name: "branch_code"},
+              {name: "branch_name"},
+              {name: "number"},
+              {name: "dbs_company_id"},
+              {name: "swift_code"},
+              {name: "account_name"},
+              {name: "payment_code"},
+              {name: "bnm_code"},
+              {name: "organization_code"},
+              {name: "boa_company_id"},
+              {name: "boa_eft_key"}
+            ]
+          },
+          {name: "location", type: "object", properties:
+            [
+              {name: "id"},
+              {name: "line_1"},
+              {name: "line_2"},
+              {name: "post_code"}
+            ]
+          },
+          {name: "additional_hk_employee_info"},
+          {name: "additional_sg_employee_info", type: "object", properties:
+            [
+              {name: "cpf_donation_type"},
+              {name: "cpf_additional_donation_type"},
+              {name: "spass_expiry_date"},
+              {name: "spass_issue_date"},
+              {name: "epass_expiry_date"},
+              {name: "epass_issue_date"},
+              {name: "pr_status"},
+              {name: "pr_effective_date"},
+              {name: "wp_issue_date"},
+              {name: "wp_expiry_date"},
+              {name: "wp_worker_category"}
+            ]
+          },
+          {name: "additional_my_employee_info"},
+        ]
+      end
+    }
+  },
+
+  actions: {
+    
+    get_employee: {
+      title: "Get Employee",
+      description: "Get <span class='provider'>Employee</span> in <span class='provider'>Talenox</span>",
+      subtitle: "Get Employee in Talenox",
+      
+      input_fields: lambda do |object_definitions|
+        object_definitions["employee"].
+          only("employee_id").
+          required("employee_id")
+      end,
+      
+      execute: lambda do |connection, input|
+        get("/api/v2/employees/#{input["employee_id"]}")
+      end,
+      
+      output_fields: lambda do |object_definitions|
+        object_definitions["employee"]
+      end
+      
+    }, # End of 'Get Employee' Action
+    
+     create_employee: {
+       title: "Create Employee",
+       description: "Create <span class='provider'>Employee</span> in <span class='provider'>Talenox</span>",
+       subtitle: "Create Employee in Talenox",
+      
+       input_fields: lambda do |object_definitions|
+         object_definitions["employee"].
+           ignored("id").
+           required("email").
+           concat(
+             [
+               {
+                 name: "invite_user", type: "boolean", control_type: "checkbox", render_input: "boolean_conversion",
+                 parse_output: "boolean_conversion", toggle_hint: "Select from list", toggle_field:
+                 {
+                   name: "invite_user", type: "boolean", control_type: "text", render_input: "boolean_conversion",
+                   parse_output: "boolean_conversion", toggle_hint: "Enter custom value",
+                 }
+               }
+             ]
+           )
+       end,
+      
+       execute: lambda do |connection, input|
+         post("/api/v2/employees", input).
+           after_error_response(/.*/) do |_, body, _, message|
+             error("#{message}: #{body}")
+           end
+       end,
+      
+       output_fields: lambda do |object_definitions|
+         object_definitions["employee"]
+       end
+     }, # End of 'Create Employee' Action
+    
+    delete_employee: {
+      title: "Delete Employee",
+      description: "Delete <span class='provider'>Employee</span> in <span class='provider'>Talenox</span>",
+      subtitle: "Delete Employee in Talenox",
+      
+      input_fields: lambda do |object_definitions|
+        object_definitions["employee"].
+          only("employee_id").
+          required("employee_id")
+      end,
+      
+      execute: lambda do |connection, input|
+        delete("/api/v2/employees/#{input["employee_id"]}").
+          after_error_response do |code, body, header, message|
+            error("#{message}: #{body}")
+          end
+      end,
+      
+      output_fields: lambda do
+        [
+          {name: "message"}
+        ]
+      end
+      
+    } # End of 'Delete Employee' Action
+    
+  }, # End of Actions Block
+
+# triggers: {
+
+ # pick_lists: {
+  #  all_employees: lambda do |connection|
+   #   response = get("/api/v1/#{connection["api_token"]}/employees").
+    #    map do |field|
+     #     [field&.dig("email"), field&.dig("employee_id")]
+      #  end
+   # end
+    
+    #    },
+    #}
+}
+
